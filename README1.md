@@ -1,16 +1,5 @@
 # DominoesAngularProject
 
-Video on how to get started [HERE](https://www.youtube.com/watch?v=1O9mRGvIZ3k&ab_channel=HindiLife)
-
-install node.js
-run 'node -v' to verify version
-run 'npm i typescript -g' to install (or update) typescript
-run 'npm i -g @angular/cli' to install Angular/CLI
-run 'ng version' | ng v (not ng --version | ng -v) to verify version
-navigate to app path then run 'ng serve'
-
-
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
 
 ## Development server
