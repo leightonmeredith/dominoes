@@ -9,6 +9,8 @@ run 'npm i -g @angular/cli' to install Angular/CLI
 run 'ng version' | ng v (not ng --version | ng -v) to verify version
 navigate to app path then run 'ng serve'
 
+Domino tiles from [HERE](https://pixabay.com/images/search/domino/)
+
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
