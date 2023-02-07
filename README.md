@@ -7,9 +7,16 @@ run 'node -v' to verify version
 run 'npm i typescript -g' to install (or update) typescript
 run 'npm i -g @angular/cli' to install Angular/CLI
 run 'ng version' | ng v (not ng --version | ng -v) to verify version
+run 'ng new projectName' to create app
 navigate to app path then run 'ng serve'
 
 Domino tiles from [HERE](https://pixabay.com/images/search/domino/)
+
+
+Attempt to appease dependabot merge file [HERE](https://gist.githubusercontent.com/J-DK/e8aca8e0c60310c1666c00ce139d6d52/raw/f4e478dfee2f18860f54bf1f7169da82a9512fe7/auto-approve-n-merge.yml) 
+
+Instructions on implementation [HERE](https://medium.com/@dileepkumarjami/auto-approve-and-merge-pull-requests-by-dependabot-using-github-actions-468557967fa4)
+
 
 
 

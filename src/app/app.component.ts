@@ -101,7 +101,14 @@ export class AppComponent implements OnInit {
       this.leftPlayEnd = tileInfo.key.split('-')[0];
       this.rightPlayEnd = tileInfo.key.split('-')[1];
     }
-    this.playedTiles.push(tileInfo)
+
+
+    if(this.playLeft) {
+      this.playedTiles.unshift(tileInfo)
+    } else {
+      this.rightPlayEnd = this.updatePlayEnd(tileInfo, this.rightPlayEnd)
+      this.playedTiles.push(tileInfo)
+    }
   }
 
   isNonDouble(tileInfo: any) {
@@ -124,7 +131,12 @@ export class AppComponent implements OnInit {
     }
 
     return false;
-    // if playedTile length AND tile inc  leftPlayEnd or rightPlayEnd number
+  }
+
+  updatePlayEnd(tileInfo: any, end: any) {
+    const TILE_SIDES = tileInfo.key.split('-');
+
+    return TILE_SIDES.find((x: any) => !x.includes(end)) ?? end;
   }
 }
 

@@ -1,0 +1,32 @@
+.column {
+  float: left;
+  padding: 5px;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.played-column {
+  float: left;
+}
+
+.non-double-tile {
+  transform: rotate(90deg);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.non-double-reverse-tile {
+  transform: rotate(180deg);
+}
+
+.valid-tile-style {
+  filter: brightness(70%);
+}
+
+.invalid-tile-style {
+  cursor: pointer;
+}
