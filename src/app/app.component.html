@@ -321,9 +321,11 @@
 
   TABLE
   <div class="row">
-  <div *ngFor="let tile of playedTiles; let i = index;" class="played-column">
-    <img style="cursor: pointer;" [src]="tile.img" [alt]="tile.key" [ngClass]="{'non-double-tile': isNonDouble(tile), 'non-double-reverse-tile': false}" width="50" height="90">
-  </div>
+  <img *ngIf="pickSide" (click)="placeTile(true)" style="float:left; cursor: pointer; transform: rotate(180deg);" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-right'"  width="50" height="60">
+    <div *ngFor="let tile of playedTiles; let i = index;" class="played-column">
+      <img [src]="tile.img" [alt]="tile.key" [ngClass]="{'non-double-tile': isNonDouble(tile), 'non-double-reverse-tile': tile.reverse}" width="50" height="90">
+    </div>
+  <img *ngIf="pickSide" (click)="placeTile(false)" style="float:right; cursor: pointer;" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-left'"  width="50" height="60">
 </div>
 
   HAND1
