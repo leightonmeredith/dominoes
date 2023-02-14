@@ -60,22 +60,37 @@ export class AppComponent implements OnInit {
     this.getDominoes();
   }
 
+
+  turn = 0;
+
   getDominoes() {
     for (let a = 0; a < 7; a++) {
       const tile1 = this.pullTiles();
-      this.hand1.push({key: tile1.tile, img: `../assets/img/${tile1.tile}.png`, reverse: false, turn: tile1.tile === '6-6' })
+      if(tile1.tile === '6-6') {
+        this.turn = 1
+      }
+      this.hand1.push({key: tile1.tile, img: `../assets/img/${tile1.tile}.png`, reverse: false })
       tile1.isSelected = true
 
       const tile2 = this.pullTiles();
-      this.hand2.push({key: tile2.tile, img: `../assets/img/${tile2.tile}.png`, reverse: false, turn: tile1.tile === '6-6' })
+      if(tile2.tile === '6-6') {
+        this.turn = 2
+      }
+      this.hand2.push({key: tile2.tile, img: `../assets/img/${tile2.tile}.png`, reverse: false })
       tile2.isSelected = true;
 
       const tile3 = this.pullTiles();
-      this.hand3.push({key: tile3.tile, img: `../assets/img/${tile3.tile}.png`, reverse: false, turn: tile1.tile === '6-6' })
+      if(tile3.tile === '6-6') {
+        this.turn = 3
+      }
+      this.hand3.push({key: tile3.tile, img: `../assets/img/${tile3.tile}.png`, reverse: false })
       tile3.isSelected = true
 
       const tile4 = this.pullTiles();
-      this.hand4.push({key: tile4.tile, img: `../assets/img/${tile4.tile}.png`, reverse: false, turn: tile1.tile === '6-6' })
+      if(tile4.tile === '6-6') {
+        this.turn = 4
+      }
+      this.hand4.push({key: tile4.tile, img: `../assets/img/${tile4.tile}.png`, reverse: false })
       tile4.isSelected = true;
     }
 
@@ -92,9 +107,9 @@ export class AppComponent implements OnInit {
   selectedHand: any[] = [];
   selectedIndex: any = {};
 
-  playTile(tileInfo: any, index: any, hand: any[]) {
+  playTile(tileInfo: any, index: any, hand: any[], turn: number) {
     const TILE_SIDES = tileInfo.key.split('-');
-    if(!this.isValidTile(tileInfo)){
+    if(!this.isValidTile(tileInfo) || turn !== this.turn){
       return
     }
 
@@ -117,6 +132,7 @@ export class AppComponent implements OnInit {
       this.playLeft = false;
     }
 
+    this.updateTurn();
 
     this.displayOnTable(hand.at(index))
     hand.splice(index, 1)
@@ -128,6 +144,7 @@ export class AppComponent implements OnInit {
       this.leftPlayEnd = TILE_SIDES[0];
       this.rightPlayEnd = TILE_SIDES[1];
     }
+
     if(this.playLeft) {
       tileInfo.reverse = this.isNonDouble(tileInfo) && TILE_SIDES[1] === this.leftPlayEnd
       this.leftPlayEnd = this.updatePlayEnd(tileInfo, this.leftPlayEnd)
@@ -137,6 +154,8 @@ export class AppComponent implements OnInit {
       this.rightPlayEnd = this.updatePlayEnd(tileInfo, this.rightPlayEnd)
       this.playedTiles.push(tileInfo)
     }
+
+    this.checkForPass();
   }
 
   isNonDouble(tileInfo: any) {
@@ -173,8 +192,53 @@ export class AppComponent implements OnInit {
     this.playLeft = choseLeft;
     this.pickSide = false
 
+
+    this.updateTurn();
+
     this.displayOnTable(this.selectedHand.at(this.selectedIndex))
     this.selectedHand.splice(this.selectedIndex, 1)
+  }
+
+  updateTurn() {
+    if (this.turn === 4) {
+      this.turn = 1;
+    } else {
+      this.turn++;
+    }
+  }
+
+  checkForPass() {
+    if (this.turn === 1) {
+      if (this.hand1.find(x => this.isValidTile(x))) {
+        return;
+      } else {
+        this.updateTurn();
+      }
+    }
+
+    if(this.turn === 2) {
+      if (this.hand2.find(x => this.isValidTile(x))) {
+        return;
+      } else {
+        this.updateTurn();
+      }
+    }
+
+    if (this.turn === 3) {
+      if (this.hand3.find(x => this.isValidTile(x))) {
+        return;
+      } else {
+        this.updateTurn();
+      }
+    }
+
+    if(this.turn === 4) {
+      if (this.hand4.find(x => this.isValidTile(x))) {
+        return;
+      } else {
+        this.updateTurn();
+      }
+    }
   }
 }
 
