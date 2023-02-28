@@ -9,14 +9,17 @@ export class AppComponent implements OnInit {
   title = 'dominoesAngularProject';
 
   dominoes = [
-    { tile: "0-0", isSelected: false },
+    { tile: '', isSelected: false },
   ]
+  gameClosedCount = {hand1: 0, hand2: 0, hand3: 0, hand4: 0}
 
-  hand1: any[] = []
-  hand2: any[] = []
-  hand3: any[] = []
-  hand4: any[] = []
-  playedTiles: any[] = []
+  hand1: any[] = [];
+  hand2: any[] = [];
+  hand3: any[] = [];
+  hand4: any[] = [];
+  playedTiles: any[] = [];
+  selectedHand: any[] = [];
+  selectedIndex: any = {};
 
   leftPlayEnd: string = '';
   rightPlayEnd: string = '';
@@ -24,8 +27,12 @@ export class AppComponent implements OnInit {
   playLeft: boolean = false;
   pickSide: boolean = false;
 
-  winnerText: string = '';
+  gameClosedText: string = '';
   gameClosed: boolean = false;
+
+  passCount = 0;
+  turn = 0;
+
 
   constructor() {
     //TODO: linter don't allow me to declare in this fxn explicitly
@@ -35,9 +42,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.getDominoes();
   }
-
-
-  turn = 0;
 
   getDominoes() {
     this.resetValues();
@@ -70,9 +74,6 @@ export class AppComponent implements OnInit {
       this.hand4.push({key: tile4.tile, img: `../assets/img/${tile4.tile}.png`, reverse: false })
       tile4.isSelected = true;
     }
-
-    // console.log({2: this.hand2, 3: this.hand3, 4: this.hand4})
-
   }
 
   pullTiles() {
@@ -80,9 +81,6 @@ export class AppComponent implements OnInit {
 
       return filteredTiles[Math.floor(Math.random()*filteredTiles.length)];
   }
-
-  selectedHand: any[] = [];
-  selectedIndex: any = {};
 
   playTile(tileInfo: any, index: any, hand: any[], turn: number) {
     const TILE_SIDES = tileInfo.key.split('-');
@@ -136,11 +134,13 @@ export class AppComponent implements OnInit {
     hand.splice(index, 1)
 
     if(hand.length === 0) {
-      this.winnerText = `WINNER is Player ${this.turn}`;
-      this.gameClosed = true;
+      this.closeGame(`WINNER is Player ${this.turn}`)
     } else {
+      this.passCount = 0
       this.updateTurn();
+
       this.checkForPass();
+
     }
 
   }
@@ -152,15 +152,20 @@ export class AppComponent implements OnInit {
 
   isValidTile(tileInfo: any) {
     const TILE_SIDES = tileInfo.key.split('-');
-    if(this.playedTiles.length === 0 && TILE_SIDES[0] === '6' && TILE_SIDES[1] === '6' ) {
+
+    if(this.playedTiles.length === 0
+      && TILE_SIDES[0] === '6'
+      && TILE_SIDES[1] === '6') {
       return true;
     }
 
-    if(TILE_SIDES[0] === this.leftPlayEnd || TILE_SIDES[0] === this.rightPlayEnd) {
+    if(TILE_SIDES[0] === this.leftPlayEnd
+      || TILE_SIDES[0] === this.rightPlayEnd) {
       return true;
     }
 
-    if(TILE_SIDES[1] === this.leftPlayEnd || TILE_SIDES[1] === this.rightPlayEnd) {
+    if(TILE_SIDES[1] === this.leftPlayEnd
+      || TILE_SIDES[1] === this.rightPlayEnd) {
       return true;
     }
 
@@ -178,8 +183,6 @@ export class AppComponent implements OnInit {
     this.playLeft = choseLeft;
     this.pickSide = false
 
-
-
     this.displayOnTable(this.selectedHand, this.selectedIndex)
   }
 
@@ -192,42 +195,95 @@ export class AppComponent implements OnInit {
   }
 
   checkForPass() {
-      console.log({hand2: this.hand2, turn: this.turn})
+    if (this.passCount === 4) {
+      this.closeGame('GAME BLOCKED.. Count points')
+    } else if (this.passCount > 4) {
+      return;
+    }
+
+    console.log({
+      hand1: this['hand1'],
+      hand2: this.hand2,
+      hand3: this.hand3,
+      hand4: this.hand4,
+      turn: this.turn,
+      pC: this.passCount
+    })
+
     if (this.turn === 1) {
       if (this.hand1.find(x => this.isValidTile(x))) {
         return;
       } else {
-        console.log('hand1pass')
+        this.passCount++;
+        console.log('hand1pass' + this.passCount);
         this.updateTurn();
+        this.checkForPass();
       }
     }
-
-    if(this.turn === 2) {
+    else if(this.turn === 2) {
       if (this.hand2.find(x => this.isValidTile(x))) {
         return;
       } else {
-        console.log('hand2pass')
+        this.passCount++;
+        console.log('hand2pass' + this.passCount);
         this.updateTurn();
+        this.checkForPass();
       }
     }
-
-    if (this.turn === 3) {
+    else if (this.turn === 3) {
       if (this.hand3.find(x => this.isValidTile(x))) {
         return;
       } else {
-        console.log('hand3pass')
+        this.passCount++;
+        console.log('hand3pass' + this.passCount);
         this.updateTurn();
+        this.checkForPass();
       }
     }
-
-    if(this.turn === 4) {
+    else if(this.turn === 4) {
       if (this.hand4.find(x => this.isValidTile(x))) {
         return;
       } else {
-        console.log('hand4pass')
+        this.passCount++;
+        console.log('hand4pass' + this.passCount);
         this.updateTurn();
+        this.checkForPass();
       }
     }
+  }
+
+  getClosedCount() {
+
+    this.hand1.forEach(dom => {
+      const a = +(dom.key.split('-')[0]);
+      const b = +(dom.key.split('-')[1]);
+      this.gameClosedCount.hand1 += a + b
+    });
+
+    this.hand2.forEach(dom => {
+      const a = +(dom.key.split('-')[0]);
+      const b = +(dom.key.split('-')[1]);
+      this.gameClosedCount.hand2 += a + b
+    });
+
+    this.hand3.forEach(dom => {
+      const a = +(dom.key.split('-')[0]);
+      const b = +(dom.key.split('-')[1]);
+      this.gameClosedCount.hand3 += a + b
+    });
+
+    this.hand4.forEach(dom => {
+      const a = +(dom.key.split('-')[0]);
+      const b = +(dom.key.split('-')[1]);
+      this.gameClosedCount.hand4 += a + b
+    });
+
+  }
+
+  closeGame(text: string) {
+    this.gameClosedText = text;
+    this.gameClosed = true
+    return this.getClosedCount();
   }
 
   resetGame() {
@@ -274,7 +330,7 @@ export class AppComponent implements OnInit {
 
     this.leftPlayEnd = '';
     this.rightPlayEnd = '';
-    this.winnerText = '';
+    this.gameClosedText = '';
     this.playLeft = false;
     this.pickSide = false;
     this.gameClosed = false;

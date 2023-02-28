@@ -320,7 +320,7 @@
 <div class="content" role="main">
 
   <div *ngIf="gameClosed">
-    <h1>{{ winnerText }} </h1>
+    <h1>{{ gameClosedText }} </h1>
     <button (click)="resetGame()">New Game</button>
   </div>
 
@@ -333,7 +333,7 @@
   <img *ngIf="pickSide" (click)="placeTile(false)" style="float:right; cursor: pointer;" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-left'"  width="50" height="60">
 </div>
 
-  HAND1
+  HAND1 <h1 *ngIf="gameClosed">{{ gameClosedCount.hand1 }}</h1>
   <div class="row">
     <div *ngFor="let tile of hand1; let i = index;" class="column">
       <img [ngClass]="isValidTile(tile) ? 'invalid-tile-style' : 'valid-tile-style'" (click)="playTile(tile, i, hand1, 1)" [src]="tile.img" [alt]="tile.key" width="50" height="90">
@@ -341,7 +341,7 @@
     <img *ngIf="turn === 1" style="float:right; cursor: pointer;" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-left'"  width="50" height="60">
   </div>
 
-  HAND2
+  HAND2 <h1 *ngIf="gameClosed">{{ gameClosedCount.hand2 }}</h1>
   <div class="row">
     <div *ngFor="let tile of hand2; let i = index;" class="column">
       <img [ngClass]="isValidTile(tile) ? 'invalid-tile-style' : 'valid-tile-style'" (click)="playTile(tile, i, hand2, 2)" [src]="tile.img" [alt]="tile.key" width="50" height="90">
@@ -349,7 +349,7 @@
     <img *ngIf="turn === 2" style="float:right; cursor: pointer;" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-left'"  width="50" height="60">
   </div>
 
-  HAND3
+  HAND3 <h1 *ngIf="gameClosed">{{ gameClosedCount.hand3 }}</h1>
   <div class="row">
     <div *ngFor="let tile of hand3; let i = index;" class="column">
       <img [ngClass]="isValidTile(tile) ? 'invalid-tile-style' : 'valid-tile-style'" (click)="playTile(tile, i, hand3, 3)" [src]="tile.img" [alt]="tile.key" width="50" height="90">
@@ -357,7 +357,7 @@
     <img *ngIf="turn === 3" style="float:right; cursor: pointer;" [src]="'../assets/img/arrow-left.png'" [alt]="'arrow-left'"  width="50" height="60">
   </div>
 
-  HAND4
+  HAND4 <h1 *ngIf="gameClosed">{{ gameClosedCount.hand4 }}</h1>
   <div class="row">
     <div *ngFor="let tile of hand4; let i = index;" class="column">
       <img [ngClass]="isValidTile(tile) ? 'invalid-tile-style' : 'valid-tile-style'" (click)="playTile(tile, i, hand4, 4)" [src]="tile.img" [alt]="tile.key" width="50" height="90">
