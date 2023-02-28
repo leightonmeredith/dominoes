@@ -10,33 +10,6 @@ export class AppComponent implements OnInit {
 
   dominoes = [
     { tile: "0-0", isSelected: false },
-    { tile: "0-1", isSelected: false },
-    { tile: "0-2", isSelected: false },
-    { tile: "0-3", isSelected: false },
-    { tile: "0-4", isSelected: false },
-    { tile: "0-5", isSelected: false },
-    { tile: "0-6", isSelected: false },
-    { tile: "1-1", isSelected: false },
-    { tile: "1-2", isSelected: false },
-    { tile: "1-3", isSelected: false },
-    { tile: "1-4", isSelected: false },
-    { tile: "1-5", isSelected: false },
-    { tile: "1-6", isSelected: false },
-    { tile: "2-2", isSelected: false },
-    { tile: "2-3", isSelected: false },
-    { tile: "2-4", isSelected: false },
-    { tile: "2-5", isSelected: false },
-    { tile: "2-6", isSelected: false },
-    { tile: "3-3", isSelected: false },
-    { tile: "3-4", isSelected: false },
-    { tile: "3-5", isSelected: false },
-    { tile: "3-6", isSelected: false },
-    { tile: "4-4", isSelected: false },
-    { tile: "4-5", isSelected: false },
-    { tile: "4-6", isSelected: false },
-    { tile: "5-5", isSelected: false },
-    { tile: "5-6", isSelected: false },
-    { tile: "6-6", isSelected: false },
   ]
 
   hand1: any[] = []
@@ -45,15 +18,18 @@ export class AppComponent implements OnInit {
   hand4: any[] = []
   playedTiles: any[] = []
 
-  leftPlayEnd: any;
-  rightPlayEnd: any;
+  leftPlayEnd: string = '';
+  rightPlayEnd: string = '';
 
-  playLeft: boolean;
-  pickSide: boolean;
+  playLeft: boolean = false;
+  pickSide: boolean = false;
+
+  winnerText: string = '';
+  gameClosed: boolean = false;
 
   constructor() {
-    this.playLeft = false;
-    this.pickSide = false;
+    //TODO: linter don't allow me to declare in this fxn explicitly
+    this.resetValues();
   }
 
   ngOnInit() {
@@ -64,6 +40,7 @@ export class AppComponent implements OnInit {
   turn = 0;
 
   getDominoes() {
+    this.resetValues();
     for (let a = 0; a < 7; a++) {
       const tile1 = this.pullTiles();
       if(tile1.tile === '6-6') {
@@ -94,7 +71,7 @@ export class AppComponent implements OnInit {
       tile4.isSelected = true;
     }
 
-    console.log({2: this.hand2, 3: this.hand3, 4: this.hand4})
+    // console.log({2: this.hand2, 3: this.hand3, 4: this.hand4})
 
   }
 
@@ -132,13 +109,14 @@ export class AppComponent implements OnInit {
       this.playLeft = false;
     }
 
-    this.updateTurn();
 
-    this.displayOnTable(hand.at(index))
-    hand.splice(index, 1)
+    this.displayOnTable(hand, index)
   }
 
-  displayOnTable(tileInfo: any) {
+  displayOnTable(hand: any[], index: any) {
+
+    let tileInfo = hand.at(index)
+
     const TILE_SIDES = tileInfo.key.split('-');
     if(this.playedTiles.length === 0) {
       this.leftPlayEnd = TILE_SIDES[0];
@@ -155,7 +133,16 @@ export class AppComponent implements OnInit {
       this.playedTiles.push(tileInfo)
     }
 
-    this.checkForPass();
+    hand.splice(index, 1)
+
+    if(hand.length === 0) {
+      this.winnerText = `WINNER is Player ${this.turn}`;
+      this.gameClosed = true;
+    } else {
+      this.updateTurn();
+      this.checkForPass();
+    }
+
   }
 
   isNonDouble(tileInfo: any) {
@@ -187,16 +174,13 @@ export class AppComponent implements OnInit {
   }
 
   placeTile(choseLeft: boolean) {
-    console.log(choseLeft)
 
     this.playLeft = choseLeft;
     this.pickSide = false
 
 
-    this.updateTurn();
 
-    this.displayOnTable(this.selectedHand.at(this.selectedIndex))
-    this.selectedHand.splice(this.selectedIndex, 1)
+    this.displayOnTable(this.selectedHand, this.selectedIndex)
   }
 
   updateTurn() {
@@ -208,10 +192,12 @@ export class AppComponent implements OnInit {
   }
 
   checkForPass() {
+      console.log({hand2: this.hand2, turn: this.turn})
     if (this.turn === 1) {
       if (this.hand1.find(x => this.isValidTile(x))) {
         return;
       } else {
+        console.log('hand1pass')
         this.updateTurn();
       }
     }
@@ -220,6 +206,7 @@ export class AppComponent implements OnInit {
       if (this.hand2.find(x => this.isValidTile(x))) {
         return;
       } else {
+        console.log('hand2pass')
         this.updateTurn();
       }
     }
@@ -228,6 +215,7 @@ export class AppComponent implements OnInit {
       if (this.hand3.find(x => this.isValidTile(x))) {
         return;
       } else {
+        console.log('hand3pass')
         this.updateTurn();
       }
     }
@@ -236,10 +224,65 @@ export class AppComponent implements OnInit {
       if (this.hand4.find(x => this.isValidTile(x))) {
         return;
       } else {
+        console.log('hand4pass')
         this.updateTurn();
       }
     }
   }
+
+  resetGame() {
+    this.getDominoes();
+  }
+
+  resetValues() {
+    this.dominoes = [
+      { tile: "0-0", isSelected: false },
+      { tile: "0-1", isSelected: false },
+      { tile: "0-2", isSelected: false },
+      { tile: "0-3", isSelected: false },
+      { tile: "0-4", isSelected: false },
+      { tile: "0-5", isSelected: false },
+      { tile: "0-6", isSelected: false },
+      { tile: "1-1", isSelected: false },
+      { tile: "1-2", isSelected: false },
+      { tile: "1-3", isSelected: false },
+      { tile: "1-4", isSelected: false },
+      { tile: "1-5", isSelected: false },
+      { tile: "1-6", isSelected: false },
+      { tile: "2-2", isSelected: false },
+      { tile: "2-3", isSelected: false },
+      { tile: "2-4", isSelected: false },
+      { tile: "2-5", isSelected: false },
+      { tile: "2-6", isSelected: false },
+      { tile: "3-3", isSelected: false },
+      { tile: "3-4", isSelected: false },
+      { tile: "3-5", isSelected: false },
+      { tile: "3-6", isSelected: false },
+      { tile: "4-4", isSelected: false },
+      { tile: "4-5", isSelected: false },
+      { tile: "4-6", isSelected: false },
+      { tile: "5-5", isSelected: false },
+      { tile: "5-6", isSelected: false },
+      { tile: "6-6", isSelected: false },
+    ]
+
+    this.hand1 = []
+    this.hand2 = []
+    this.hand3 = []
+    this.hand4 = []
+    this.playedTiles = []
+
+    this.leftPlayEnd = '';
+    this.rightPlayEnd = '';
+    this.winnerText = '';
+    this.playLeft = false;
+    this.pickSide = false;
+    this.gameClosed = false;
+  }
 }
+
+
+
+
 
 
