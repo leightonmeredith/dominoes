@@ -61,21 +61,21 @@ export class AppComponent implements OnInit {
       if(tile2.tile === '6-6') {
         this.turn = 2
       }
-      this.hand2.push({key: tile2.tile, img: `../assets/img/${tile2.tile}.png`, reverse: false })
+      this.hand2.push({key: tile2.tile, img: `../assets/img/back.png`, reverse: false })
       tile2.isSelected = true;
 
       const tile3 = this.pullTiles();
       if(tile3.tile === '6-6') {
         this.turn = 3
       }
-      this.hand3.push({key: tile3.tile, img: `../assets/img/${tile3.tile}.png`, reverse: false })
+      this.hand3.push({key: tile3.tile, img: `../assets/img/back.png`, reverse: false })
       tile3.isSelected = true
 
       const tile4 = this.pullTiles();
       if(tile4.tile === '6-6') {
         this.turn = 4
       }
-      this.hand4.push({key: tile4.tile, img: `../assets/img/${tile4.tile}.png`, reverse: false })
+      this.hand4.push({key: tile4.tile, img: `../assets/img/back.png`, reverse: false })
       tile4.isSelected = true;
     }
   }
@@ -131,6 +131,10 @@ export class AppComponent implements OnInit {
     if(this.playedTiles.length === 0) {
       this.leftPlayEnd = TILE_SIDES[0];
       this.rightPlayEnd = TILE_SIDES[1];
+    }
+
+    if(tileInfo.img.includes('back')) {
+      tileInfo.img = `../assets/img/${tileInfo.key}.png`
     }
 
     if(this.playLeft) {
