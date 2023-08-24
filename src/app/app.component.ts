@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
   gameClosedText: string = '';
   gameClosed: boolean = false;
 
+  minPlayTime = 1000;
+  maxPlayTime = 1000;
   passCount = 0;
   turn = 0;
 
@@ -41,6 +43,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.getDominoes();
+
+    this.aiPlayTile();
   }
 
   getDominoes() {
@@ -91,10 +95,10 @@ export class AppComponent implements OnInit {
     if( this.isNonDouble(tileInfo) &&
         TILE_SIDES.includes(this.leftPlayEnd) &&
         TILE_SIDES.includes(this.rightPlayEnd) &&
-        this.leftPlayEnd !== this.rightPlayEnd) {
-
+        this.leftPlayEnd !== this.rightPlayEnd &&
+        this.aiUserPlayed)
+    {
           this.pickSide = true;
-
           this.selectedHand = hand;
           this.selectedIndex = index;
           return;
@@ -109,6 +113,14 @@ export class AppComponent implements OnInit {
 
 
     this.displayOnTable(hand, index)
+    this.aiUserPlayed = true;
+
+    setTimeout(() => {
+      if(this.turn !== 1){
+        this.aiUserPlayed = false;
+        this.aiPlayTile()
+      }
+    }, this.thoughtInterval(this.minPlayTime, this.maxPlayTime));
   }
 
   displayOnTable(hand: any[], index: any) {
@@ -184,6 +196,11 @@ export class AppComponent implements OnInit {
     this.pickSide = false
 
     this.displayOnTable(this.selectedHand, this.selectedIndex)
+
+    setTimeout(() => {
+        this.aiUserPlayed = false;
+        this.aiPlayTile()
+    }, this.thoughtInterval(this.minPlayTime, this.maxPlayTime));
   }
 
   updateTurn() {
@@ -286,10 +303,6 @@ export class AppComponent implements OnInit {
     return this.getClosedCount();
   }
 
-  resetGame() {
-    this.getDominoes();
-  }
-
   resetValues() {
     this.dominoes = [
       { tile: "0-0", isSelected: false },
@@ -334,6 +347,36 @@ export class AppComponent implements OnInit {
     this.playLeft = false;
     this.pickSide = false;
     this.gameClosed = false;
+  }
+
+  aiUserPlayed = false;
+
+  aiPlayTile() {
+    let a: any[] = [];
+    switch (this.turn) {
+      case 2:
+        a = this.hand2;
+        break;
+      case 3:
+        a = this.hand3;
+        break;
+      default:
+        a = this.hand4;
+        break;
+    }
+
+    for (let index = 0; index < a.length; index++) {
+      const element = a[index];
+      this.playTile(element, index, a, this.turn);
+      if(this.aiUserPlayed){
+        break;
+      }
+    }
+
+  }
+
+  thoughtInterval(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
   }
 }
 

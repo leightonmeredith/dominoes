@@ -17,6 +17,7 @@ Attempt to appease dependabot merge file [HERE](https://gist.githubusercontent.c
 
 Instructions on implementation [HERE](https://medium.com/@dileepkumarjami/auto-approve-and-merge-pull-requests-by-dependabot-using-github-actions-468557967fa4)
 
+How to build mobile app [HERE](https://www.youtube.com/watch?v=yrSFLZ_b0Aw&ab_channel=CodewithAniaKub%C3%B3w)
 
 
 
